@@ -4,14 +4,37 @@
 	<meta charset="UTF-8">
 	<title>Consuming an API</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+	<style>
+		.spinna{
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			/* bring your own prefixes */
+			transform: translate(-50%, -50%);
+			z-index: 9999;
+			display: none;
+			width: 130px;
+			height: 130px;
+		}
+
+		.spinna img {
+			width: 100px;
+			height: 100px;			
+		}
+
+
+	</style>
 </head>
 <body>
 <!-- User Data -->
+<!-- Loading gif -->
+<div id="spinna" class="spinna"><img src='default.gif'></div>
 
+<!-- Container for table and API data -->
 <div class="container">
 	<div class="row">
 		<div class="col-md-8 col-md-offset-2">
-		<h3>User Data</h3>
+		<h3 style="margin-left: 2%; margin-bottom: 3%;">User Data</h3>
 			<table id="personDataTable" class="table table-striped"></table>
 		</div>
 	</div>
@@ -32,7 +55,6 @@
 
 		// The GET method should be used for non-destructive operations — that is, operations where you are only "getting" data from the server, not changing data on the server. For example, a query to a search service might be a GET request. GET requests may be cached by the browser, which can lead to unpredictable behavior if you are not expecting it. GET requests generally send all of their data in a query string.
 
-		// The POST method should be used for destructive operations — that is, operations where you are changing data on the server. For example, a user saving a blog post should be a POST request. POST requests are generally not cached by the browser; a query string can be part of the URL, but the data tends to be sent separately as post data.
 
 		window.onload = getAjaxFromServer();
 
@@ -43,6 +65,12 @@
 			$.ajax({
 			  url: root + '/users/',
 			  method: 'GET',
+			  beforeSend: function(){
+			      $('#spinna').show();
+			  },
+			  complete: function(){
+			      $('#spinna').hide();
+			  },
 			  success: function(data, textStatus, jqXHR) {
 				  // since we are using jQuery, you don't need to parse response
 				  drawTable(data);
